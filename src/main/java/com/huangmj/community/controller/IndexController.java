@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class IndexController {
 
-    @Autowired
+    @Autowired(required = false)
     private UserMapper userMapper;
 
     //一个反斜杠代表根目录
