@@ -5,7 +5,6 @@ import com.huangmj.community.dto.GithubUser;
 import com.huangmj.community.mapper.UserMapper;
 import com.huangmj.community.model.User;
 import com.huangmj.community.provider.GithubProvider;
-import org.jboss.logging.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -58,6 +57,8 @@ public class AuthorizeController {
             user.setAccountId(String.valueOf(githubUser.getId()));
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
+            user.setAvatarUrl(githubUser.getSvatarUrl());
+
             //将用户信息插入数据库
             userMapper.insert(user);
             response.addCookie(new Cookie("token",token));
