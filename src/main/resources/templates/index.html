@@ -8,6 +8,7 @@
     <!-- th引入css和js资源文件 -->
     <link th:href="@{/css/bootstrap-theme.min.css}" href="../static/css/bootstrap-theme.min.css" rel="stylesheet"/>
     <link th:href="@{/css/bootstrap.min.css}" href="../static/css/bootstrap.min.css" rel="stylesheet"/>
+    <link th:href="@{/css/community.css}" href="../static/css/community.css" rel="stylesheet"/>
     <script th:src="@{/js/bootstrap.min.js}" src="../static/js/bootstrap.min.js"></script>
 </head>
 <body>
@@ -17,7 +18,8 @@
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                 <span class="sr-only">魔方世界</span>
             </button>
-            <a class="navbar-brand" href="#">魔方世界</a>
+            <!--     “/"点击返回根目录       -->
+            <a class="navbar-brand" href="/">魔方世界</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -48,5 +50,35 @@
         </div>
     </div>
 </nav>
+<div class="container-fluid main">
+    <div class="row">
+        <!--   按下tab键可以自动生成,12代表占据整个栅格系统12的比例，9+3=12 -->
+        <div class="col-lg-9 col-md-12 col-sm-12 col-sx-12">
+            <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span> 发现</h2>
+            <hr>
+
+            <div class="media" th:each="question : ${questions}">>
+                <div class="media-left">
+                    <a href="#">
+                        <img class="media-object img-rounded"
+                             th:src="${question.user.avatarUrl}"
+                             src="https://avatars3.githubusercontent.com/u/23078434?v=4">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading" th:text="${question.title}"></h4>
+                    <span th:text="${question.description}"></span><br>
+                    <span class="text-desc">
+                        <sapn th:text="${question.commentCount}"></sapn> 个回复 •
+                        <sapn th:text="${question.viewCount}"></sapn> 次浏览 •
+                        <span th:text="${#dates.format(question.gmtCreate,'dd MMM yyyy')}"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-sx-12"></div>
+        <h3>热门话题</h3>
+    </div>
+</div>
 </body>
 </html>
