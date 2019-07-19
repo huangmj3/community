@@ -35,21 +35,46 @@ public class PublishController {
             @RequestParam("tag") String tag,
             HttpServletRequest request,
             Model model) {
+        //向前端模型中添加数据，便于数据的回显
+        model.addAttribute("title",title);
+        model.addAttribute("description",description);
+        model.addAttribute("tag",tag);
+
         User user = null;
 
         Cookie[] cookies = request.getCookies();
-        for(Cookie cookie : cookies){
-            if(cookie.getName().equals("token")){
-                String token = cookie.getValue();
-                user = userMapper.findByToken(token);
-                if(user != null){
-                    request.getSession().setAttribute("user",user);
+        if(cookies != null){
+            if(cookies != null){
+                for(Cookie cookie : cookies){
+                    if(cookie.getName().equals("token")){
+                        String token = cookie.getValue();
+                        user = userMapper.findByToken(token);
+                        if(user != null){
+                            request.getSession().setAttribute("user",user);
+                        }
+                        break;
+                    }
                 }
-                break;
             }
         }
+
         if(user == null){
+            //通过model将信息传递至前端
             model.addAttribute("error","用户未登陆");
+            return "publish";
+        }
+
+        //字段校验，前后端其实都应该有，防止前端绕过验证
+        if(title == null || title.equals("")){
+            model.addAttribute("error","标题不能为空");
+            return "publish";
+        }
+        if(description == null || description.equals("")){
+            model.addAttribute("error","问题补充不能为空");
+            return "publish";
+        }
+        if(tag == null || tag.equals("")){
+            model.addAttribute("error","标签不能为空");
             return "publish";
         }
 
