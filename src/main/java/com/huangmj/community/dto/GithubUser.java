@@ -8,5 +8,6 @@ public class GithubUser {
     private Long id;
     private String name;
     private String bio;
-    private String avatar_url;
+    //因为通过fastJson进行数据传输，fastJson自动进行驼峰映射，这样子命名更加符合java规范
+    private String avatarUrl;
 }
