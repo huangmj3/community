@@ -1,7 +1,6 @@
 package com.huangmj.community.controller;
 
 import com.huangmj.community.mapper.QuestionMapper;
-import com.huangmj.community.mapper.UserMapper;
 import com.huangmj.community.model.Question;
 import com.huangmj.community.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
@@ -19,9 +17,6 @@ public class PublishController {
 
     @Autowired(required = false)
     private QuestionMapper questionMapper;
-
-    @Autowired(required = false)
-    private UserMapper userMapper;
 
     @GetMapping("/publish")
     public String publish(){
@@ -40,23 +35,7 @@ public class PublishController {
         model.addAttribute("description",description);
         model.addAttribute("tag",tag);
 
-        User user = null;
-
-        Cookie[] cookies = request.getCookies();
-        if(cookies != null && cookies.length != 0){
-            if(cookies != null){
-                for(Cookie cookie : cookies){
-                    if(cookie.getName().equals("token")){
-                        String token = cookie.getValue();
-                        user = userMapper.findByToken(token);
-                        if(user != null){
-                            request.getSession().setAttribute("user",user);
-                        }
-                        break;
-                    }
-                }
-            }
-        }
+        User user = (User)request.getSession().getAttribute("user");
 
         if(user == null){
             //通过model将信息传递至前端
