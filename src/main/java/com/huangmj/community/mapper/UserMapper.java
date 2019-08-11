@@ -12,8 +12,8 @@ public interface UserMapper {
     void insert(User user);
 
     //添加参数注解
-    @Select("select * from user where token = #{token}")
-    User findByToken(@Param("token") String token);
+        @Select("select * from user where token = #{token}")
+        User findByToken(@Param("token") String token);
 
     //通过Id查询得到user
     @Select("select * from user where id = #{id}")

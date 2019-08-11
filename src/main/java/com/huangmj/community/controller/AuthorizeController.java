@@ -31,7 +31,7 @@ public class AuthorizeController {
     @Value("${github.redirect.uri}")
     private String redirectUri;
 
-    @Autowired
+    @Autowired(required = false)
     private UserMapper userMapper;
 
     //没有映射就不会进行return查询

@@ -13,13 +13,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+//网站首页控制器
 @Controller
 public class IndexController {
 
     @Autowired
     private QuestionService questionService;
 
-    @Autowired
+    @Autowired(required = false)
     private UserMapper userMapper;
 
     //一个反斜杠代表根目录
