@@ -5,6 +5,7 @@ import com.huangmj.community.dto.GithubUser;
 import com.huangmj.community.mapper.UserMapper;
 import com.huangmj.community.model.User;
 import com.huangmj.community.provider.GithubProvider;
+import com.huangmj.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -31,8 +32,8 @@ public class AuthorizeController {
     @Value("${github.redirect.uri}")
     private String redirectUri;
 
-    @Autowired(required = false)
-    private UserMapper userMapper;
+    @Autowired
+    private UserService userService;
 
     //没有映射就不会进行return查询
     @GetMapping("/callback")
@@ -55,12 +56,10 @@ public class AuthorizeController {
             user.setToken(token);
             user.setName(githubUser.getName());
             user.setAccountId(String.valueOf(githubUser.getId()));
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(githubUser.getAvatarUrl());
 
+            userService.createOrUpdate(user);
             //将用户信息插入数据库
-            userMapper.insert(user);
             response.addCookie(new Cookie("token",token));
             //将user对象放入Session中
             request.getSession().setAttribute("user",githubUser);
@@ -71,6 +70,19 @@ public class AuthorizeController {
             //登录失败,重新登陆
             return "redirect:/";
         }
-//        return "index";
+    }
+    //登出
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response){
+        //Session中去除用户数据
+        request.getSession().removeAttribute("user");
+        //通过新建空cookie方式清空用户cookie信息
+        Cookie cookie = new Cookie("token",null);
+        //maxAge为负时，退出浏览器cookie失效，maxAge为0，立即删除
+        cookie.setMaxAge(0);
+        //新cookie加入，更新cookie
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 }
