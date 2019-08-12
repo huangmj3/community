@@ -115,4 +115,15 @@ public class QuestionService {
         questionDTO.setUser(user);
         return questionDTO;
     }
+
+    public void createOrUpdate(Question question) {
+        if(question.getId() == null){
+            //问题不存在，创建新问题
+            questionMapper.create(question);
+        }
+        else{
+            //问题存在，更新问题
+            questionMapper.update(question);
+        }
+    }
 }

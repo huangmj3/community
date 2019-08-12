@@ -24,6 +24,8 @@
             <hr>
             <!-- form表单，action后面跟着的是点击提交时提交的地址,即请求地址method=post -->
             <form action="/publish" method="post">
+                <!-- 添加Hidden标签，用于表示数据传递但是不进行显示 -->
+                <input type = "hidden" name = "id" th:value="${id}">
                 <div class="form-group">
                     <label for="title">问题标题（简单扼要）</label>
                     <!-- placeholder占位-->
