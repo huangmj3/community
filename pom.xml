@@ -118,6 +118,21 @@
 <!--                </schemas>-->
 <!--                </configuration>-->
             </plugin>
+            <!-- Mybatis Generator（MBG）,进行Mybatis的集成，models，mapper xml-->
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>1.3.7</version>
+<!--                &lt;!&ndash; 添加每次编译前自动执行Mybatis集成 &ndash;&gt;-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>Generate MyBatis Artifacts</id>-->
+<!--                        <goals>-->
+<!--                            <goal>generate</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+            </plugin>
         </plugins>
     </build>
 

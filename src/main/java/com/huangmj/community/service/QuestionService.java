@@ -1,11 +1,16 @@
 package com.huangmj.community.service;
 
+import com.huangmj.community.dao.QuestionMapper;
+import com.huangmj.community.dao.UserMapper;
 import com.huangmj.community.dto.PaginationDTO;
 import com.huangmj.community.dto.QuestionDTO;
-import com.huangmj.community.mapper.QuestionMapper;
-import com.huangmj.community.mapper.UserMapper;
+//import com.huangmj.community.mapper.QuestionMapper;
+//import com.huangmj.community.mapper.UserMapper;
 import com.huangmj.community.model.Question;
+import com.huangmj.community.model.QuestionExample;
 import com.huangmj.community.model.User;
+import com.huangmj.community.model.UserExample;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +21,10 @@ import java.util.List;
 @Service
 public class QuestionService {
 
-    @Autowired
+    @Autowired(required = false)
     QuestionMapper questionMapper;
 
-    @Autowired
+    @Autowired(required = false)
     UserMapper userMapper;
 
     public PaginationDTO list(Integer page, Integer size) {
@@ -27,7 +32,8 @@ public class QuestionService {
 
         Integer totalPage;
         //记录总条数
-        Integer totalCount = questionMapper.count();
+        QuestionExample questionExample = new QuestionExample();
+        Integer totalCount = (int) questionMapper.countByExample(questionExample);
 
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
@@ -48,11 +54,17 @@ public class QuestionService {
         //size * (page - 1)
         Integer offset = size * (page - 1);
         //查询得到所有Question对象
-        List<Question> questions = questionMapper.list(offset, size);
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
         for (Question question : questions) {
-            User user = userMapper.findById(question.getCreator());
+            //通过用户ID查找得到用户
+//            UserExample userExample = new UserExample();
+//            userExample.createCriteria()
+//                    .andIdEqualTo(question.getCreator());
+//            List<User> users = userMapper.selectByExample(userExample);
+//            User user = users.get(0);
+            User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
             //工具类，通过变量名查找、反射,来进行赋值的Spring工具类
             BeanUtils.copyProperties(question, questionDTO);
@@ -68,7 +80,10 @@ public class QuestionService {
 
         Integer totalPage;
         //记录总条数
-        Integer totalCount = questionMapper.countByUserId(userId);
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.createCriteria()
+                .andCreatorEqualTo(userId);
+        Integer totalCount = (int) questionMapper.countByExample(questionExample);
 
 //        page = 1;
 
@@ -91,11 +106,21 @@ public class QuestionService {
         //size * (page - 1)
         Integer offset = size * (page - 1);
         //查询得到所有Question对象
-        List<Question> questions = questionMapper.listByUserId(userId, offset, size);
+        QuestionExample example = new QuestionExample();
+        example.createCriteria()
+                .andCreatorEqualTo(userId);
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, size));
+
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
         for (Question question : questions) {
-            User user = userMapper.findById(question.getCreator());
+            //通过用户ID查找得到用户
+//            UserExample userExample = new UserExample();
+//            userExample.createCriteria()
+//                    .andIdEqualTo(question.getCreator());
+//            List<User> users = userMapper.selectByExample(userExample);
+//            User user = users.get(0);
+            User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
             //工具类，通过变量名查找、反射,来进行赋值的Spring工具类
             BeanUtils.copyProperties(question, questionDTO);
@@ -107,11 +132,16 @@ public class QuestionService {
     }
 
     public QuestionDTO getById(Integer id) {
-        Question question = questionMapper.getById(id);
+        Question question = questionMapper.selectByPrimaryKey(id);
         QuestionDTO questionDTO = new QuestionDTO();
         //工具类，通过变量名查找、反射,来进行赋值的Spring工具类
         BeanUtils.copyProperties(question, questionDTO);
-        User user = userMapper.findById(question.getCreator());
+        //通过用户ID查找得到用户
+        UserExample userExample = new UserExample();
+        userExample.createCriteria()
+                .andIdEqualTo(question.getCreator());
+        List<User> users = userMapper.selectByExample(userExample);
+        User user = users.get(0);
         questionDTO.setUser(user);
         return questionDTO;
     }
@@ -119,11 +149,20 @@ public class QuestionService {
     public void createOrUpdate(Question question) {
         if(question.getId() == null){
             //问题不存在，创建新问题
-            questionMapper.create(question);
+            questionMapper.insert(question);
         }
         else{
             //问题存在，更新问题
-            questionMapper.update(question);
+            Question updateQuestion = new Question();
+            updateQuestion.setGmtModified(System.currentTimeMillis());
+            updateQuestion.setTitle(question.getTitle());
+            updateQuestion.setDescription(question.getDescription());
+            updateQuestion.setTag(question.getTag());
+            QuestionExample example = new QuestionExample();
+            example.createCriteria()
+                    .andIdEqualTo(question.getId());
+            //updateByExampleSelective
+            questionMapper.updateByExampleSelective(updateQuestion, example);
         }
     }
 }
