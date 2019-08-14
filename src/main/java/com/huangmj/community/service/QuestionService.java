@@ -1,11 +1,15 @@
 package com.huangmj.community.service;
 
+import com.huangmj.community.dao.QuestionExtMapper;
 import com.huangmj.community.dao.QuestionMapper;
 import com.huangmj.community.dao.UserMapper;
 import com.huangmj.community.dto.PaginationDTO;
 import com.huangmj.community.dto.QuestionDTO;
 //import com.huangmj.community.mapper.QuestionMapper;
 //import com.huangmj.community.mapper.UserMapper;
+import com.huangmj.community.exception.CustomizeErrorCode;
+import com.huangmj.community.exception.CustomizeException;
+//import com.huangmj.community.mapper.QuestionExtMapper;
 import com.huangmj.community.model.Question;
 import com.huangmj.community.model.QuestionExample;
 import com.huangmj.community.model.User;
@@ -22,10 +26,13 @@ import java.util.List;
 public class QuestionService {
 
     @Autowired(required = false)
-    QuestionMapper questionMapper;
+    private QuestionMapper questionMapper;
 
     @Autowired(required = false)
-    UserMapper userMapper;
+    private UserMapper userMapper;
+
+    @Autowired(required = false)
+    private QuestionExtMapper questionExtMapper;
 
     public PaginationDTO list(Integer page, Integer size) {
         PaginationDTO paginationDTO = new PaginationDTO();
@@ -133,6 +140,9 @@ public class QuestionService {
 
     public QuestionDTO getById(Integer id) {
         Question question = questionMapper.selectByPrimaryKey(id);
+        if(question == null){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         QuestionDTO questionDTO = new QuestionDTO();
         //工具类，通过变量名查找、反射,来进行赋值的Spring工具类
         BeanUtils.copyProperties(question, questionDTO);
@@ -162,7 +172,28 @@ public class QuestionService {
             example.createCriteria()
                     .andIdEqualTo(question.getId());
             //updateByExampleSelective
-            questionMapper.updateByExampleSelective(updateQuestion, example);
+            int updated = questionMapper.updateByExampleSelective(updateQuestion, example);
+            //更新失败
+            if(updated != 1){
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
         }
+    }
+
+    public void incView(Integer id) {
+//        //通过selectByPrimaryKey去获得Question对象
+//        Question question = questionMapper.selectByPrimaryKey(id);
+//        Question updateQuestion = new Question();
+//        updateQuestion.setViewCount(question.getViewCount() + 1);
+//
+//        QuestionExample questionExample = new QuestionExample();
+//        questionExample.createCriteria()
+//                .andIdEqualTo(id);
+
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
+//        questionMapper.updateByExampleSelective(updateQuestion, questionExample);
     }
 }

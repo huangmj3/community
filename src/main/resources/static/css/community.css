@@ -32,3 +32,7 @@ body{
     color: #999;
     font-size: 13px;
 }
+/*错误界面“回到主页”跳转按钮*/
+.jumbotron {
+    margin: 50px;
+}

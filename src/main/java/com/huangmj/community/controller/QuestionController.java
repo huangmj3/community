@@ -19,6 +19,8 @@ public class QuestionController {
     public String question(@PathVariable(name = "id") Integer id,
                            Model model){
         QuestionDTO questionDTO = questionService.getById(id);
+        //页面每次被打开，累加阅读数功能
+        questionService.incView(id);
         //model+model.addAttribute放入前端界面
         model.addAttribute("question",questionDTO);
         return "question";
