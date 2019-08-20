@@ -1,38 +1,87 @@
-body{
+body {
     /**/
     background-color: #efefef;
 }
+
 /*.的作用，加载器*/
-.main{
+.main {
     background-color: white;
     margin: 30px;
 }
 
-.btn-publish{
-    float:right;
-    margin-bottom:15px;
+.btn-publish {
+    float: right;
+    margin-bottom: 15px;
 }
 
-.media-object{
+.media-object {
     width: 38px;
     height: 38px;
 }
 
-.text-desc{
+.text-desc {
     font-size: 12px;
     font-weight: normal;
     color: #999;
 }
 
-.profile.section{
-    margin-top:15px;
+.profile.section {
+    margin-top: 15px;
 }
 
 .community-menu {
+    display: block;
     color: #999;
     font-size: 13px;
+    margin-bottom: 15px;
 }
+
 /*错误界面“回到主页”跳转按钮*/
 .jumbotron {
     margin: 50px;
+}
+
+/*头像框边上的名字样式*/
+.media-body {
+    padding-top: 10px;
+}
+
+/*回复框样式，margin使用简写方式*/
+.comment {
+    margin: 10px 0;
+}
+
+/*回复内容发布按钮,float:right表示向右浮动*/
+.btn-comment {
+    float: right;
+    margin-botton: 10px;
+}
+
+/*评论内容分割线*/
+.comment-sp {
+    margin-top: 0;
+}
+
+/*展示回复时候的标签菜单*/
+.menu {
+    color: #999;
+    margin-top: 5px;
+}
+
+.menu.icon {
+    margin-right: 6px;
+    font-size: 15px;
+    /*鼠标悬浮时出现小手样式*/
+    cursor: pointer;
+}
+
+/*标签菜单悬浮时候的样式*/
+.menu.icon.hover {
+    color: #466ef3;
+}
+/*评论与评论之间的样式,solid为边框样式，实线*/
+.comments{
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
 }

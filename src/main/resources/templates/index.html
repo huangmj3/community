@@ -12,6 +12,20 @@
 <script th:src="@{/js/jquery-3.4.1.min.js}" src="../static/js/jquery-3.4.1.min.js"></script>
 <script th:src="@{/js/bootstrap.min.js}" src="../static/js/bootstrap.min.js"></script>
 </head>
+<!--未登陆进行回复，然后进行登陆的脚本处理-->
+<script type="application/javascript">
+    <!--  界面加载完成时进行的校验  -->
+    windows.onload = function () {
+        //启动前端debug，或者在前端souces中打上断点也是一样的效果
+        // debugger;
+        var closable = window.localStorage.getItem("closable");
+        //界面关闭,JS没有equals方法，可以直接进行比较
+        if(closable == "true"){
+            window.close();
+            window.localStorage.removeItem("closable");
+        }
+    }
+</script>
 <body>
 <!--导入navigation-->
 <div th:insert="~{navigation :: nav}"></div>

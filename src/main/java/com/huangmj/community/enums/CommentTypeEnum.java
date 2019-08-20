@@ -2,7 +2,7 @@ package com.huangmj.community.enums;
 
 public enum CommentTypeEnum {
     QUESTION(1),
-    COMMENT(2 );
+    COMMENT(2);
     private Integer type;
 
     public Integer getType() {
