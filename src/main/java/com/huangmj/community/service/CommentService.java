@@ -73,6 +73,8 @@ public class CommentService {
 		commentExample.createCriteria()
 				.andParentIdEqualTo(id)
 				.andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
+		//将回复内容按照时间方式倒序，让新回复的内容出现在界面的最上面
+		commentExample.setOrderByClause("gmt_creator desc");
 		List<Comment> comments = commentMapper.selectByExample(commentExample);
 
 		if (comments.size() == 0) {
