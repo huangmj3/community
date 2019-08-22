@@ -1,9 +1,6 @@
 package com.huangmj.community.service;
 
-import com.huangmj.community.dao.CommentMapper;
-import com.huangmj.community.dao.QuestionExtMapper;
-import com.huangmj.community.dao.QuestionMapper;
-import com.huangmj.community.dao.UserMapper;
+import com.huangmj.community.dao.*;
 import com.huangmj.community.dto.CommentDTO;
 import com.huangmj.community.enums.CommentTypeEnum;
 import com.huangmj.community.exception.CustomizeErrorCode;
@@ -35,6 +32,9 @@ public class CommentService {
 	@Autowired(required = false)
 	private UserMapper userMapper;
 
+	@Autowired(required = false)
+	private CommentExtMapper commentExtMapper;
+
 	//添加事务，同一事务要么全部成功，要不全部失败，因为会进行回滚操作
 	@Transactional
 	public void insert(Comment comment) {
@@ -55,6 +55,12 @@ public class CommentService {
 			}
 
 			commentMapper.insert(comment);
+
+			//增加评论数
+			Comment parentComment = new Comment();
+			parentComment.setId(comment.getParentId());
+			parentComment.setCommentCount(1);
+			commentExtMapper.incCommentCount(parentComment);
 		} else {
 			//回复问题
 			Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
@@ -68,13 +74,13 @@ public class CommentService {
 		}
 	}
 
-	public List<CommentDTO> listQuestionId(Long id) {
+	public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum type) {
 		CommentExample commentExample = new CommentExample();
 		commentExample.createCriteria()
 				.andParentIdEqualTo(id)
-				.andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
+				.andTypeEqualTo(type.getType());
 		//将回复内容按照时间方式倒序，让新回复的内容出现在界面的最上面
-		commentExample.setOrderByClause("gmt_creator desc");
+		commentExample.setOrderByClause("gmt_create desc");
 		List<Comment> comments = commentMapper.selectByExample(commentExample);
 
 		if (comments.size() == 0) {

@@ -6,9 +6,11 @@ import lombok.Data;
 
 //前后端传输结果DTO
 @Data
-public class ResultDTO {
+public class ResultDTO<T> {
     private Integer code;
     private String message;
+    //泛型用以处理多个类型
+    private T data;
 
     public static ResultDTO errorOf(Integer code,String message){
         ResultDTO resultDTO = new ResultDTO();
@@ -32,4 +34,12 @@ public class ResultDTO {
         return resultDTO;
     }
 
+    //方法前加入<T>用以使用泛型
+    public static <T> ResultDTO okOf(T t){
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(200);
+        resultDTO.setMessage("请求成功");
+        resultDTO.setData(t);
+        return resultDTO;
+    }
 }

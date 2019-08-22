@@ -1,8 +1,8 @@
 package com.huangmj.community.controller;
 
-import com.huangmj.community.dto.CommentCreateDTO;
 import com.huangmj.community.dto.CommentDTO;
 import com.huangmj.community.dto.QuestionDTO;
+import com.huangmj.community.enums.CommentTypeEnum;
 import com.huangmj.community.service.CommentService;
 import com.huangmj.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +27,10 @@ public class QuestionController {
     public String question(@PathVariable(name = "id") Long id,
                            Model model){
         QuestionDTO questionDTO = questionService.getById(id);
+        //获取相关问题列表
+        List<QuestionDTO> relatedQuestions = questionService.selectRelated(questionDTO);
 
-        List<CommentDTO> comments = commentService.listQuestionId(id);
+        List<CommentDTO> comments = commentService.listByTargetId(id, CommentTypeEnum.QUESTION);
 
         //页面每次被打开，累加阅读数功能
         questionService.incView(id);
@@ -36,6 +38,8 @@ public class QuestionController {
         model.addAttribute("question",questionDTO);
         //将评论放入界面
         model.addAttribute("comments",comments);
+        //将相关问题放入界面
+        model.addAttribute("relatedQuestions",relatedQuestions);
         return "question";
     }
 }

@@ -68,24 +68,71 @@ body {
     margin-top: 5px;
 }
 
-.menu.icon {
+/*回复时候标签菜单图标样式*/
+.icon {
     margin-right: 6px;
     font-size: 15px;
     /*鼠标悬浮时出现小手样式*/
     cursor: pointer;
 }
 
-/*标签菜单悬浮时候的样式*/
-.menu.icon.hover {
+/*菜单项被启动时的样式，评论图标变为蓝色*/
+.active {
     color: #466ef3;
 }
+
+/*标签菜单悬浮时候的样式*/
+.icon:hover {
+    color: #466ef3;
+}
+
 /*评论与评论之间的样式,solid为边框样式，实线*/
-.comments{
+.comments {
     padding-bottom: 5px;
     margin-bottom: 15px;
     border-bottom: 1px solid #eee;
 }
+
 /*问题标题样式*/
-.question-title{
+.question-title {
     margin-top: 25px;
+}
+
+/*二级评论框*/
+.sub-comments {
+    border-radius: 5px;
+    margin-top: 10px;
+    border: 1px solid #eee;
+    padding-top: 15px;
+    margin-bottom: 15px;
+}
+
+/*二级评论的评论按钮*/
+.btn2 {
+    margin: 10px 0;
+    /*float: right;*/
+}
+
+/*评论图标悬浮时候样式*/
+.comment-icon :hover {
+    font-size: 15px;
+    cursor: pointer;
+    color: #466ef3;
+}
+
+/*问题标签样式*/
+.question-tag {
+    margin-right: 5px;
+}
+/*相关问题样式*/
+.question-related{
+    line-height: 20px;
+    font-size: 12px;
+    margin-left: 0;
+    list-style: none;
+    padding-left: 0;
+}
+/*推荐内容图片样式*/
+.question-wechat{
+    width: 100%;
 }
